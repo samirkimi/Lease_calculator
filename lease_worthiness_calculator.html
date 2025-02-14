@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease Worthiness Calculator</title>
+    <script>
+        function calculateLeaseWorthiness() {
+            let sellingPrice = parseFloat(prompt("Enter Selling Price ($):", "38697"));
+            let msrp = parseFloat(prompt("Enter MSRP ($):", "40000"));
+            let residualPercent = parseFloat(prompt("Enter Residual Value % (e.g., 60 for 60%):", "60"));
+            let moneyFactor = parseFloat(prompt("Enter Money Factor (e.g., 0.00125):", "0.00125"));
+            let leaseTerm = parseInt(prompt("Enter Lease Term (Months):", "36"));
+            let downPayment = parseFloat(prompt("Enter Down Payment ($, if any):", "0"));
+            let taxesFees = parseFloat(prompt("Enter Additional Monthly Taxes & Fees ($, if any):", "0"));
+
+            // Convert residual percentage to dollar value
+            let residualValue = (msrp * residualPercent) / 100;
+
+            // Adjust capitalized cost (subtract down payment)
+            let capCost = sellingPrice - downPayment;
+
+            // Calculate depreciation cost
+            let depreciation = (capCost - residualValue) / leaseTerm;
+
+            // Calculate finance charge
+            let financeCharge = (capCost + residualValue) * moneyFactor;
+
+            // Calculate base monthly lease payment
+            let baseMonthlyLeasePayment = depreciation + financeCharge + taxesFees;
+
+            // Calculate total lease cost
+            let totalLeaseCost = (baseMonthlyLeasePayment * leaseTerm) + downPayment;
+
+            // 1% Rule Check: If Monthly Payment <= 1% of MSRP, it's a good lease
+            let onePercentRule = msrp * 0.01;
+            let leaseWorthiness = baseMonthlyLeasePayment <= onePercentRule ? "✅ Good Lease (Passes 1% Rule)" : "❌ Not a Great Lease (Fails 1% Rule)";
+
+            // Display results
+            alert(`Lease Worthiness Check:
+-----------------------------------
+Depreciation Cost: $${depreciation.toFixed(2)}
+Finance Charge: $${financeCharge.toFixed(2)}
+Base Monthly Payment: $${baseMonthlyLeasePayment.toFixed(2)}
+Total Lease Cost: $${totalLeaseCost.toFixed(2)}
+
+1% Rule Benchmark: $${onePercentRule.toFixed(2)}
+Lease Decision: ${leaseWorthiness}`);
+        }
+
+        // Run function automatically when page loads
+        calculateLeaseWorthiness();
+    </script>
+</head>
+<body>
+    <h1>Lease Worthiness Calculator</h1>
+    <p>The calculation runs automatically when the page loads.</p>
+</body>
+</html>
