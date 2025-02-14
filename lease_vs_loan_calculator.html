@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lease vs Loan Calculator</title>
+    <script>
+        function calculateLeaseVsLoan() {
+            let sellingPrice = parseFloat(prompt("Enter Selling Price ($):", "38697"));
+            let msrp = parseFloat(prompt("Enter MSRP ($):", "40000"));
+            let residualPercent = parseFloat(prompt("Enter Residual Value % (e.g., 60 for 60%):", "60"));
+            let moneyFactor = parseFloat(prompt("Enter Money Factor (e.g., 0.00125):", "0.00125"));
+            let leaseTerm = parseInt(prompt("Enter Lease Term (Months):", "36"));
+            let downPayment = parseFloat(prompt("Enter Down Payment ($, if any):", "0"));
+            let taxesFees = parseFloat(prompt("Enter Additional Monthly Taxes & Fees ($, if any):", "0"));
+            let loanAPR = parseFloat(prompt("Enter Loan Interest Rate % (e.g., 5 for 5% APR):", "5"));
+            let loanTerm = parseInt(prompt("Enter Loan Term (Months):", "60"));
+
+            // Convert residual percentage to dollar value
+            let residualValue = (msrp * residualPercent) / 100;
+
+            // Adjust capitalized cost (subtract down payment)
+            let capCost = sellingPrice - downPayment;
+
+            // Calculate depreciation cost
+            let depreciation = (capCost - residualValue) / leaseTerm;
+
+            // Calculate finance charge
+            let financeCharge = (capCost + residualValue) * moneyFactor;
+
+            // Calculate base monthly lease payment
+            let baseMonthlyLeasePayment = depreciation + financeCharge + taxesFees;
+
+            // Calculate total lease cost
+            let totalLeaseCost = (baseMonthlyLeasePayment * leaseTerm) + downPayment;
+
+            // Loan Calculation
+            let loanPrincipal = sellingPrice - downPayment;
+            let monthlyInterestRate = (loanAPR / 100) / 12;
+            let monthlyLoanPayment = (loanPrincipal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTerm));
+            let totalLoanCost = monthlyLoanPayment * loanTerm;
+
+            // Decision Logic
+            let decision;
+            if (totalLeaseCost < totalLoanCost * 0.8) {
+                decision = "✅ Leasing is a better deal!";
+            } else if (totalLeaseCost > totalLoanCost) {
+                decision = "❌ Financing is a better deal!";
+            } else {
+                decision = "⚖️ Both options are similar, consider your preferences.";
+            }
+
+            // Display results
+            alert(`Lease vs. Loan Comparison:
+-----------------------------------
+Lease Monthly Payment: $${baseMonthlyLeasePayment.toFixed(2)}
+Total Lease Cost: $${totalLeaseCost.toFixed(2)}
+
+Loan Monthly Payment: $${monthlyLoanPayment.toFixed(2)}
+Total Loan Cost: $${totalLoanCost.toFixed(2)}
+
+Best Option: ${decision}`);
+        }
+
+        // Run function automatically when page loads
+        calculateLeaseVsLoan();
+    </script>
+</head>
+<body>
+    <h1>Lease vs Loan Calculator</h1>
+    <p>The calculation runs automatically when the page loads.</p>
+</body>
+</html>
